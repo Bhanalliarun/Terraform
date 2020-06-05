@@ -1,0 +1,6 @@
+Deploying to AWS with Ansible and Terraform:-
+
+In this hands-on environment, we are going to walk through an actual Terraform Apply and build a real Wordpress website in AWS using Terraform and Ansible. The scripts are all created for you, you will just need to deploy them! Feel free to use these scripts for your own environment to deploy your own blog!
+
+The scripts used can be found on our github instance and cloned locally via a command such as
+git clone https://github.com/satyensingh/terransible.git

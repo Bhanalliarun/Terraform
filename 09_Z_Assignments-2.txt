@@ -23,47 +23,46 @@ Output the plan to a file called tfplan.
 
 Then apply the plan using tfplan and make sure that the apply doesn’t prompt for input.
 
-Worked logs:
+=========================
+Solution:
 
-[root@terraform basics]# vi main.tf
-[root@terraform basics]#
-[root@terraform basics]#
-[root@terraform basics]#
-[root@terraform basics]# cat main.tf
-provider "aws" {
+#cat main.tf 
 
-        region = "us-east-1"
-
+provider "docker" {
+  
 }
 
-variable "server_name" {
-        default = "dvs-server1"
+variable "image_name" {
+  default = "ghost:latest"
 }
 
-variable "keypair" {
-        default = "Arun_ohio"
+variable "container_name" {
+  default = "ghost_blog"
 }
 
+variable "ext_port" {
+  default = "8081"
+}
 
-resource "aws_instance" "myserver" {
-  ami           = "ami-0323c3dd2da7fb37d"
-  instance_type = "t2.micro"
-  key_name = "${var.keypair}"
-  tags = {
-    Name = "${var.server_name}"
+resource "docker_image" "ghost_image" {
+  name = "${var.image_name}"
+}
+
+resource "docker_container" "ghost_container" {
+  name  = "${var.container_name}"
+  image = "${docker_image.ghost_image.latest}"
+
+  ports {
+    internal = 2368
+    external = "${var.ext_port}"
   }
 }
 
+=============
+To execute the above code, run the below command
 
-output "mydns" {
-        value = "${aws_instance.myserver.public_dns}"
+#terraform init
 
-}
-[root@terraform basics]# terraform apply
-aws_instance.myserver: Refreshing state... (ID: i-016a1a43af60edb57)
+#terraform plan -out tf_plan
 
-Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
-
-Outputs:
-
-mydns = ec2-54-242-28-238.compute-1.amazonaws.com
+#terraform apply tf_plan 
